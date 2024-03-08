@@ -6,7 +6,7 @@ import * as styles from '../styles';
 
 const StyledButton = styled(Button)((props) => ({
     backgroundColor: props.customColor ? props.customColor : "",
-    width: props.customWidth ? props.customWidth : 200,
+    width: props.customWidth ? props.customWidth : "100%",
 }));
 
 const CustomButton = (props) => {

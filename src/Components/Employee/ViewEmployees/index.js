@@ -4,12 +4,11 @@ import { Box, width } from '@mui/system';
 import * as employeeApi from '../../../apis/employeeApi';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import DropdownSelect from '../../../commons/DropdownSelect';
-import DatePickers from '../../../commons/DatePicker';
 import CustDataGrid from '../../../commons/DataGrid';
 import * as utils from './utils';
 
-function ViewEmployees() {
+function ViewEmployees(props) {
+    const {setSelectionModel} = props;
     const [data, setData] = useState([]);
     const [mainRows, setMainRows] = useState([]);
 
@@ -90,6 +89,7 @@ function ViewEmployees() {
                         style={{ height: 407 }}
                         columns={utils.columns}
                         rows={mainRows}
+                        setSelectionModel={setSelectionModel}
                     />
                 </Grid>
             </Grid>

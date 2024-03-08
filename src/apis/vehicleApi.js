@@ -8,3 +8,7 @@ export const addVehicleApi = (request) => {
 export const getAllVehicles = (request) => {
     return axios.get(apiUrls.addVehicleUrl);
 }
+
+export const addEmployeeToVehicle = (request, id) => {
+return axios.post(`${apiUrls.addEmployeeToVehicleUrl}/${id}`, request);
+}

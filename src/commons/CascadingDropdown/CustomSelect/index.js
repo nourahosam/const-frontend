@@ -1,39 +1,54 @@
-import { MenuItem, TextField } from '@mui/material';
-import { useField, useFormikContext } from 'formik';
-import React from 'react';
-import { useEffect } from 'react';
+import { InputLabel, MenuItem, TextField } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { Controller } from "react-hook-form";
 
-const SelectWrapper = ({
-    name,
-    options,
-    ...otherProps
-}) => {
+const StyledSelect = styled(TextField)((props) => ({
+  width: '100%',
+}));
 
-    const [field, meta ] = useField(name);
+const DropdownSelect = (props) => {
 
-    const configSelect = {
-        field,
-        ...otherProps,
-        select: true,
-        variant: 'outlined',
-        fullWidth: true,
-    }
+  const { menuoptions, defaultValue, label, name, control, checkForParent, index, selectMap, setSelectMap, placeholder = undefined } = props;
 
-    if(meta && meta.touched && meta.error){
-        configSelect.error = true;
-        configSelect.helperText = meta.error;
-    }
+  const setSelectedValue = (index, value) => {
+    const oldObj = selectMap[index];
+    oldObj.selectedValue = value;
+    selectMap[index] = oldObj;
+    setSelectMap(selectMap);
+  }
 
-    return (
-        <TextField 
-            {...configSelect}
+  return (
+    <>
+      {console.log("wsalt")}
+      <Controller
+        control={control}
+        name={name}
+        render={({
+          field: { onChange, onBlur, value, name, ref },
+          fieldState: { invalid, isTouched, isDirty, error },
+          formState,
+        }) => (<StyledSelect
+          id={label}
+          select
+          defaultValue={defaultValue? defaultValue: null}
+          onChange={(e) => {
+            onChange(e);
+            setSelectedValue(index, e.target.value);
+            checkForParent(e.target.value, index);
+            
+          }}
+          value={value}
+          label={label}
+          // placeholder={placeholder ? placeholder : label}
+          {...props}
         >
-            {console.log("Name",name)}
-            {Object.keys(options).map((el, pos) =>{
-                return(<MenuItem key={pos} value={el}>{options[el]}</MenuItem>)
-            })}
-        </TextField>
-    );
+          {menuoptions.map((item, index) => {
+            return (<MenuItem value={item.id} key={item.id}>{item.type}</MenuItem>)
+          })}
+        </StyledSelect>)}
+      />
+
+    </>)
 }
 
-export default SelectWrapper;
+export default DropdownSelect;

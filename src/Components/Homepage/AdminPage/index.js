@@ -1,12 +1,11 @@
 import React from 'react';
-import CustomButton from '../../commons/Button';
+import CustomButton from '../../../commons/Button';
 import { Grid } from '@mui/material';
-import * as utils from '../../commons/utils/constants';
+import * as utils from '../../../commons/utils/constants';
 import {useNavigate} from 'react-router-dom'
 import styled from '@emotion/styled';
 
-
-const ContainerGrid = styled(Grid)((props) => ({
+const StyledGrid = styled(Grid)((props) => ({
 
     justifyContent: 'space-between'
 }));
@@ -19,9 +18,8 @@ const Homepage = (props) => {
     }
 
     return (<>
-        <ContainerGrid container spacing={2}>
-        <CustomButton label={"ADMIN"} onClick={(e)=>onClickNavigate(e, "Admin")} />
-            {utils.HOMEPAGE_BUTTONS.map((object) => {
+        <StyledGrid container spacing={2}>
+            {utils.ADMIN_BUTTONS.map((object) => {
                 return (
                     <Grid item md={4}>
                         <CustomButton label={object.label} onClick={(e)=>onClickNavigate(e, object.pageName)}/>
@@ -29,7 +27,7 @@ const Homepage = (props) => {
                 )
             })}
 
-        </ContainerGrid>
+        </StyledGrid>
     </>)
 }
 

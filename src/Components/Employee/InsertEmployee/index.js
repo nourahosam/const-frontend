@@ -7,11 +7,17 @@ import { useForm } from 'react-hook-form';
 import * as utils from './utils';
 import DatePickers from '../../../commons/DatePicker';
 import { addEmployeeApi } from '../../../apis/employeeApi';
+import CascadingDropdown from '../../../commons/CascadingDropdown';
+import AlertSnackbar from '../../../commons/AlertSnackbar';
 
 function InsertEmployee() {
 
     const [nationality, setNationality] = useState([]);
     const [hiringType, setHiringType] = useState([]);
+
+    const [open, setOpen] = useState(false);
+    const [severity, setSeverity] = useState("");
+    const [message, setMessage] = useState("");
 
     useEffect(()=> {
         const natList = ["Egyptian", "Saudi", "Indian", "Bengali", "Canadian", "Egyptian", "Filipino", "Jordanian", "Nepalese", "Pakistanian", "Palestinian", "Sri Lankan", "Sudanese", "Syrian", "Yemeni", "Without NAT"]
@@ -23,16 +29,28 @@ function InsertEmployee() {
     
 
     const onSubmit = (values) => {
-        console.log("valuesssss", values);
+        const employeeType = Object.keys(values).filter((item)=> item.includes('empTypeId'));
+        const empTypeId = values[employeeType[employeeType.length-1]];
+
+        values.empTypeId = empTypeId;
+        
         values.ContractEndDt = values.ContractEndDt.format('YYYY-MM-DD');
 
-        // addEmployeeApi(values).then((res)=> {
-        //     console.log("response ====>", res)
-        // })
+        addEmployeeApi(values).then(() => {
+            setOpen(true);
+            setSeverity("success");
+            setMessage("Employee added successfully");
+        }).catch(() => {
+            setOpen(true);
+            setSeverity("error");
+            setMessage("Error adding employee");
+        });
+
     }
 
     const {
         register,
+        unregister,
         handleSubmit,
         control,
         watch,
@@ -43,6 +61,10 @@ function InsertEmployee() {
 
     return (
         <Box sx={{ backgroundColor: grey[100], padding: 5, height: '100vh' }}>
+             <AlertSnackbar open={open}
+            setOpen={setOpen}
+            message={message}
+            severity={severity}/>
             <Typography variant='h5' sx={{ padding: 2 }}>Add details of employee</Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container>
@@ -139,9 +161,11 @@ function InsertEmployee() {
                         <TextField name={utils.fields.CampLocation.name} label={utils.fields.CampLocation.label}
                             control={control} />
                     </Grid>
-                    <Grid item md={3} sx={{ padding: 2 }}>
-                        <TextField name={utils.fields.empTypeId.name} label={utils.fields.empTypeId.label}
-                            control={control} />
+                    <Grid>
+                        <CascadingDropdown 
+                        control={control} 
+                        label={utils.fields.empTypeId.label}
+                        unregister={unregister} />
                     </Grid>
                 </Grid>
                 <Button variant='contained' type='submit'>Submit</Button>

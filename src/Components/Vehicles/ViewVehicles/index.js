@@ -6,7 +6,10 @@ import { useState } from 'react';
 import CustDataGrid from '../../../commons/DataGrid';
 import * as utils from './utils';
 
-function ViewVehicles() {
+function ViewVehicles(props) {
+
+    const {setSelectionModel} = props;
+
     const [data, setData] = useState([]);
     const [mainRows, setMainRows] = useState([]);
 
@@ -19,7 +22,7 @@ function ViewVehicles() {
             rows.forEach((row, key) => {
                 console.log(row);
                 tempRows.push({
-                    id: key, plateNo: row.plateNo, plateType: row.plateType, branch: row.branch,
+                    id: row.id, plateNo: row.plateNo, plateType: row.plateType, branch: row.branch,
                     licenceEndDt: row.licenceEndDt, model: row.model,
                     year: row.year, currentUserId: row.currentUserId, checkupState: row.checkupState
                 })
@@ -48,6 +51,7 @@ function ViewVehicles() {
                         style={{ height: 407 }}
                         columns={utils.columns}
                         rows={mainRows}
+                        setSelectionModel={setSelectionModel}
                     />
                 </Grid>
             </Grid>

@@ -7,11 +7,15 @@ import { useForm } from 'react-hook-form';
 import * as utils from './utils.js';
 import DatePickers from '../../../commons/DatePicker';
 import { addVehicleApi } from '../../../apis/vehicleApi.js';
+import AlertSnackbar from '../../../commons/AlertSnackbar/index.js';
 
 function InsertVehicles() {
 
     const [nationality, setNationality] = useState([]);
     const [hiringType, setHiringType] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [severity, setSeverity] = useState("");
+    const [message, setMessage] = useState("");
 
     useEffect(()=> {
         const natList = ["Egyptian", "Saudi", "Indian", "Bengali", "Canadian", "Egyptian", "Filipino", "Jordanian", "Nepalese", "Pakistanian", "Palestinian", "Sri Lankan", "Sudanese", "Syrian", "Yemeni", "Without NAT"]
@@ -27,7 +31,16 @@ function InsertVehicles() {
         values.checkupEndDt = values.checkupEndDt.format('YYYY-MM-DD');
         values.licenceEndDt = values.licenceEndDt.format('YYYY-MM-DD');
         console.log("valuesssss", values);
-        addVehicleApi(values);
+        addVehicleApi(values).then(() => {
+            setOpen(true);
+            setSeverity("success");
+            setMessage("Vehicle added successfully");
+        }).catch(() => {
+            setOpen(true);
+            setSeverity("error");
+            setMessage("Error adding vehicle");
+        });
+;
     }
 
     const {
@@ -42,6 +55,10 @@ function InsertVehicles() {
 
     return (
         <Box sx={{ backgroundColor: grey[100], padding: 5, height: '100vh' }}>
+             <AlertSnackbar open={open}
+            setOpen={setOpen}
+            message={message}
+            severity={severity}/>
             <Typography variant='h5' sx={{ padding: 2 }}>Add details of employee</Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container>
